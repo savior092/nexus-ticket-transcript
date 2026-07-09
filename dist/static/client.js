@@ -25,6 +25,7 @@ document.addEventListener('click', (e) => {
   }
 });
 */
+exports.removeChannelHash = `customElements.whenDefined("discord-header").then(()=>{setTimeout(()=>{document.querySelectorAll("discord-header").forEach(h=>{try{const sr=h.shadowRoot;if(!sr) return;Array.from(sr.querySelectorAll("[class*=\"text-channel\"],[part=\"text-channel\"],.discord-header-text-channel")).forEach(e=>e.remove());Array.from(sr.querySelectorAll("*")).forEach(el=>{if(el.childNodes.length===1&&el.childNodes[0].nodeType===3){if(el.textContent&&el.textContent.trim()==="#") el.remove();}});const t=sr.querySelector('.discord-header-text-channel')||sr.querySelector('[part="text-channel"]');if(t) t.style.display="none";}catch(e){}});},500);});`;
 exports.scrollToMessage = 'document.addEventListener("click",t=>{let e=t.target;if(!e)return;let o=e?.getAttribute("data-goto");if(o){let r=document.getElementById(`m-${o}`);r?(r.scrollIntoView({behavior:"smooth",block:"center"}),r.style.backgroundColor="rgba(148, 156, 247, 0.1)",r.style.transition="background-color 0.5s ease",setTimeout(()=>{r.style.backgroundColor="transparent"},1e3)):console.warn("Message ${goto} not found.")}});';
 exports.revealSpoiler = 'const s=document.querySelectorAll(".discord-spoiler");s.forEach(s=>s.addEventListener("click",()=>{if(s.classList.contains("discord-spoiler")){s.classList.remove("discord-spoiler");s.classList.add("discord-spoiler--revealed");}}));';
 //# sourceMappingURL=client.js.map

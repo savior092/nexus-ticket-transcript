@@ -24,8 +24,7 @@ const types_1 = require("./types");
 // version check
 const versionPrefix = discord_js_1.version.split('.')[0];
 if (versionPrefix !== '14' && versionPrefix !== '15') {
-    console.error(`[discord-html-transcripts] Versions v3.x.x of discord-html-transcripts are only compatible with discord.js v14.x.x and v15.x.x, and you are using v${discord_js_1.version}.` +
-        `    For v13.x.x support, please install discord-html-transcripts v2.x.x using "npm install discord-html-transcripts@^2".`);
+    console.error(`[nexus-ticket-transcripts] nexus-ticket-transcripts'in bu sürümü yalnızca discord.js v14.x.x ve v15.x.x ile uyumludur ancak siz v${discord_js_1.version} sürümünü kullanıyorsunuz.`);
     process.exit(1);
 }
 /**

@@ -49,7 +49,6 @@ const client_1 = require("../static/client");
 const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
 const hydrate_1 = require("@derockdev/discord-components-core/hydrate");
-// read the package.json file and get the @derockdev/discord-components-core version
 let discordComponentsVersion = '^3.6.1';
 try {
     const packagePath = path_1.default.join(__dirname, '..', '..', 'package.json');
@@ -72,21 +71,23 @@ async function renderMessages(_a) {
             chatBody.push(rendered);
     }
     const elements = (react_1.default.createElement(discord_components_react_1.DiscordMessages, { style: { minHeight: '100vh' } },
-        react_1.default.createElement(discord_components_react_1.DiscordHeader, { guild: channel.isDMBased() ? 'Direct Messages' : channel.guild.name, channel: channel.isDMBased()
-                ? channel.type === discord_js_1.ChannelType.DM
-                    ? (_c = (_b = channel.recipient) === null || _b === void 0 ? void 0 : _b.tag) !== null && _c !== void 0 ? _c : 'Unknown Recipient'
-                    : 'Unknown Recipient'
-                : channel.name, icon: channel.isDMBased() ? undefined : (_d = channel.guild.iconURL({ size: 128 })) !== null && _d !== void 0 ? _d : undefined }, channel.isThread()
-            ? `Thread channel in ${(_f = (_e = channel.parent) === null || _e === void 0 ? void 0 : _e.name) !== null && _f !== void 0 ? _f : 'Unknown Channel'}`
+        react_1.default.createElement(discord_components_react_1.DiscordHeader, { guild: channel.guild.name,
+                 icon: channel.isDMBased() ? undefined : (_d = channel.guild.iconURL({ size: 128 })) !== null && _d !== void 0 ? _d : undefined }, channel.isThread()
+            ? `Thread channel`
             : channel.isDMBased()
                 ? `Direct Messages`
                 : channel.isVoiceBased()
-                    ? `Voice Text Channel for ${channel.name}`
+                    ? `Voice Text Channel`
                     : channel.type === discord_js_1.ChannelType.GuildCategory
                         ? `Category Channel`
                         : 'topic' in channel && channel.topic
                             ? await (0, content_1.default)(channel.topic, Object.assign({ messages, channel, callbacks, type: content_1.RenderType.REPLY }, options))
-                            : `Ticket ${channel.createdAt?.toLocaleDateString('tr-TR')} tarihinde oluşturuldu. | Talebi Oluşturan: ${options.kanalOwner?.username} (${options.kanalOwner?.id}`),
+                        : react_1.default.createElement(react_1.default.Fragment, null,
+                            react_1.default.createElement("div", { className: "header-pills-row" },
+                                react_1.default.createElement("span", { className: "header-pill" }, `Oluşturulma Tarihi: ${channel.createdAt?.toLocaleDateString('tr-TR')}`),
+                                react_1.default.createElement("span", { className: "header-pill" }, `Talebi Oluşturan: ${options.kanalOwner ? `${options.kanalOwner.tag} (${options.kanalOwner.id})` : 'Bilinmiyor'}`)
+                            ),
+                        )),
         chatBody,
         react_1.default.createElement("div", { style: { textAlign: 'center', width: '100%' } },
             options.footerText
@@ -103,16 +104,97 @@ async function renderMessages(_a) {
     const markup = server_1.default.renderToStaticMarkup(react_1.default.createElement("html", null,
         react_1.default.createElement("head", null,
             react_1.default.createElement("meta", { charSet: "utf-8" }),
+            react_1.default.createElement("style", null, `
+            body, html {
+                background-color: ${options.backgroundColor ?? '#000000'} !important;
+            }
+            discord-messages {
+                --background-color: ${options.backgroundColor ?? '#000000'} !important;
+                background-color: ${options.backgroundColor ?? '#000000'} !important;
+            }
+            discord-messages::part(messages) {
+                background-color: ${options.backgroundColor ?? '#000000'} !important;
+            }
+            discord-message:hover {
+                background-color: rgba(255,255,255,0.05) !important;
+            }
+            discord-header img {
+                border-radius: 13px !important;
+            }   
+            
+            .header-pill {
+                align-items: center;
+                font-size: 11px;
+                display: inline-block;
+                height: 100%;
+                white-space: nowrap;
+                width: auto;
+                background: #2dd3fd;
+
+                position: relative;
+                background-color: #000000;
+                border-radius: 100px;
+                border: 1px solid #ffff;
+                line-height: 1;
+                padding: 0px 12px 0px 20px;
+                text-overflow: ellipsis;
+                line-height: 1.25rem;
+                color: #ffffff;   
+                word-break: break-word;
+            }
+
+
+
+            .header-pill:before {
+                border-radius: 50%;
+                background: #2dd3fd;
+                content: '';
+                height: 10px;
+                left: 6px;
+                margin-top: -5px;
+                position: absolute;
+                top: 50%;
+                width: 10px;
+            }
+
+            .header-pills-row {
+                display: flex;
+                gap: 8px;
+                padding: 8px 16px;
+                flex-wrap: wrap;
+            }
+/* Kütüphanenin kendi oluşturduğu o sorunlu alanı tamamen ortadan kaldırır */
+.discord-header-text-channel,
+[class*="discord-header-text-channel"],
+discord-header::part(text-channel) {
+    display: none !important;
+    content: none !important;
+}
+
+/* Garanti olsun diye içindeki tüm ikon ve hash yapılarını gizle */
+.discord-header-text-channel:before,
+.discord-header-text-channel * {
+    display: none !important;
+    content: none !important;
+}
+
+            
+            `),
+
             react_1.default.createElement("meta", { name: "viewport", content: "width=device-width, initial-scale=1" }),
             react_1.default.createElement("link", { rel: "icon", type: "image/png", href: options.favicon === 'guild'
                     ? channel.isDMBased()
                         ? undefined
                         : (_g = channel.guild.iconURL({ size: 16, extension: 'png' })) !== null && _g !== void 0 ? _g : undefined
                     : options.favicon }),
-            react_1.default.createElement("title", null, channel.isDMBased() ? 'Direct Messages' : channel.name),
+            react_1.default.createElement("title", null, channel.isDMBased() ? 'Direct Messages' : 'Channel'),
             react_1.default.createElement("script", { dangerouslySetInnerHTML: {
                     __html: client_1.scrollToMessage,
                 } }),
+                            react_1.default.createElement("script", { dangerouslySetInnerHTML: {
+    __html: client_1.removeChannelHash,
+} }),
+
             !options.hydrate && (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("script", { dangerouslySetInnerHTML: {
                         __html: `window.$discordMessage={profiles:${JSON.stringify(await profiles)}}`,

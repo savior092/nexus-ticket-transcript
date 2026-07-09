@@ -87,7 +87,7 @@ async function renderASTNode(node, context) {
         case 'channel': {
             const id = node.id;
             const channel = await context.callbacks.resolveChannel(id);
-            return (react_1.default.createElement(discord_components_react_1.DiscordMention, { type: channel ? (channel.isDMBased() ? 'channel' : getChannelType(channel.type)) : 'channel' }, channel ? (channel.isDMBased() ? 'DM Channel' : channel.name) : `<#${id}>`));
+            return (react_1.default.createElement(discord_components_react_1.DiscordMention, { type: channel ? (channel.isDMBased() ? 'channel' : getChannelType(channel.type)) : 'channel' }, channel ? (channel.isDMBased() ? 'DM Channel' : 'Channel') : `Channel`));
         }
         case 'role': {
             const id = node.id;
